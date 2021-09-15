@@ -5,42 +5,51 @@ import argparse
 
 
 
-def getChallengeNames(url, uname, password):
+def getChallengeNames(url, uname=None, password=None):
 
-    r = requests.session()
+    if uname != None:
+        r = requests.session()
 
-    x = r.get(url+'/login')
-    soup = BeautifulSoup(x.content,'html.parser')
-    nonce = soup.find(id="nonce")
-    nonce =  nonce.get('value')
-    title = soup.title.contents[0]
-    params = (
-        ('next', '/api/v1/challenges'),
-    )
-    headers = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
-        'cookie': "session="+str(x.cookies.get_dict()["session"])
-    }
-    data = {
-    'name': uname,
-    'password': password,
-    '_submit': 'Submit',
-    'nonce': nonce,
-    }
+        x = r.get(url+'/login')
+        soup = BeautifulSoup(x.content,'html.parser')
+        nonce = soup.find(id="nonce")
+        nonce =  nonce.get('value')
+        title = soup.title.contents[0]
+        params = (
+            ('next', '/api/v1/challenges'),
+        )
+        headers = {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36',
+            'cookie': "session="+str(x.cookies.get_dict()["session"])
+        }
+        data = {
+        'name': uname,
+        'password': password,
+        '_submit': 'Submit',
+        'nonce': nonce,
+        }
 
-    response = r.post(url+'/login', params=params, data=data, verify=False)
+        response = r.post(url+'/login', params=params, data=data, verify=False)
+    else: 
+        response = requests.get(url + '/api/v1/challenges')
+        x = requests.get(url)
+        soup = BeautifulSoup(x.content,'html.parser')
+        title = soup.title.contents[0]
+        print(title)
     return response.text,title
 
 
-def parseChallenges(url, username, password):
+def parseChallenges(url, username=None, password=None):
     names = []
     pointsList = []
     categoryList = []
     solvesList = []
     solved = []
     tags = []
-
-    data,title = getChallengeNames(url, username, password)
+    if username != None:
+        data,title = getChallengeNames(url, username, password)
+    else:
+        data, title = getChallengeNames(url)
     data = json.loads(data)
     for i in data['data']:
         names.append(i['name'])
