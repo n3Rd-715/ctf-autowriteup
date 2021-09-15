@@ -22,3 +22,4 @@ $ python3 main.py -h
 #                        Your password for the CTF
 
 ```
+Your overarching statement about the CTF should be placed in the `desc.txt` file.
