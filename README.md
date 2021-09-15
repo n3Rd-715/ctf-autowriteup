@@ -9,11 +9,11 @@ $ pip3 install -r requirements.txt
 
 $ python3 main.py -h
 
-#usage: main.py [-h] [--url URL] [--username USERNAME] [--password PASSWORD]
+# usage: main.py [-h] [--url URL] [--username USERNAME] [--password PASSWORD]
 
-#Scrape Common CTF Platforms to format for an easy writeup document
+# Scrape Common CTF Platforms to format for an easy writeup document
 
-#optional arguments:
+# optional arguments:
 #  -h, --help            show this help message and exit
 #  --url URL             The url for the ctf website e.g. http://ctf.testing.io
 #  --username USERNAME, -u USERNAME
