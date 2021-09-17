@@ -53,11 +53,11 @@ def parseChallenges(url, username=None, password=None):
     data = json.loads(data)
     for i in data['data']:
         names.append(i['name'])
-        pointsList.append(i['value'])
-        categoryList.append(i['category'])
-        solvesList.append(i['solves'])
-        solved.append(i['solved_by_me'])
-        tags.append(i['tags'])
+        if 'value' in i: pointsList.append(i['value'])
+        if 'category' in i: categoryList.append(i['category'])
+        if 'solves' in i: solvesList.append(i['solves'])
+        if 'solved_by_me' in i: solved.append(i['solved_by_me'])
+        if 'tags' in i:tags.append(i['tags'])
     return names, pointsList, categoryList, solvesList, solved, tags,title
 
 def writeMarkdown(names, pointsList, categoryList, solvesList, solved, tags,title, description):
@@ -73,13 +73,22 @@ def writeMarkdown(names, pointsList, categoryList, solvesList, solved, tags,titl
             f.write(f"## {x.capitalize()}\n")
             for n in names:
                 if categoryList[names.index(n)] == x:
-                    if tags[names.index(n)] != []:
-                            tagsFinal = "##### Tags: "
+                    if tags[names.index(n)] != []:  
+                            tagsFinal = "\n##### Tags: "
                             for k in tags[names.index(n)]:
-                                tagsFinal += f"{k} "
+                                tagsFinal += f"{k['value']} "
                     else:
                         tagsFinal = ""
-                    f.write(f"### {n}\n #### Points: {pointsList[names.index(n)]}, Solves: {solvesList[names.index(n)]}, Solved by my Team: {solved[names.index(n)]}\n {tagsFinal}\n---\n\n")
+                    final = f"### {n} \n#### "
+                    if pointsList != []:
+                        final += f"Points: {pointsList[names.index(n)]}, "
+                    if solvesList != []:
+                        final += f"Solves: {solvesList[names.index(n)]}, "
+                    if solved != []:
+                        final += f"Solved by my Team: {solved[names.index(n)]}\n "
+                    final += f"{tagsFinal}\n---\n\n"
+
+                    f.write(final)
 
 def getDesc():
     with open('desc.txt','r') as f:
