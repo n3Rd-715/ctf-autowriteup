@@ -50,7 +50,11 @@ def parseChallenges(url, username=None, password=None):
         data,title = getChallengeNames(url, username, password)
     else:
         data, title = getChallengeNames(url)
-    data = json.loads(data)
+    try:
+        data = json.loads(data)
+    except Exception:
+            print("[!!!] decoding json data, likely a login failure")
+            quit()
     for i in data['data']:
         names.append(i['name'])
         if 'value' in i: pointsList.append(i['value'])
@@ -95,5 +99,4 @@ def getDesc():
         desc = ""
         for i in f.readlines():
             desc += f"{str(i).strip()}"
-        print(desc)
         return desc
